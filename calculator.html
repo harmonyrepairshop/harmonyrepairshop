@@ -1,0 +1,191 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harmony Repair Cost Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        #container {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+        }
+        form {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            width: 45%;
+        }
+        h2 {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        #details {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            width: 45%;
+        }
+        #result {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        #copyButton {
+            padding: 10px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="container">
+        <form>
+            <h2>Harmony Repair Cost Calculator</h2>
+            <label for="vehicleName">Vehicle Name:</label>
+            <input type="text" id="vehicleName" placeholder="Enter vehicle name">
+
+            <label for="vehicleNumber">Vehicle Number:</label>
+            <input type="text" id="vehicleNumber" placeholder="Enter vehicle number">
+
+            <label for="ownerName">Owner Name:</label>
+            <input type="text" id="ownerName" placeholder="Enter owner name">
+
+            <label for="cid">CID:</label>
+            <input type="text" id="cid" placeholder="Enter CID">
+
+            <label for="vehicleType">Vehicle Category:</label>
+            <select id="vehicleType">
+                <option value="Super">Super</option>
+                <option value="Sports">Sports</option>
+                <option value="Sedans">Sedans</option>
+            </select>
+
+            <label for="engineDamageLevel">Engine Damage Level:</label>
+            <select id="engineDamageLevel">
+                <option value="Minor">Minor</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Heavy">Heavy</option>
+                <option value="Severe">Severe</option>
+                <option value="Extreme">Extreme</option>
+            </select>
+
+            <label for="bodyDamageLevel">Body Damage Level:</label>
+            <select id="bodyDamageLevel">
+                <option value="Minor">Minor</option>
+                <option value="Moderate">Moderate</option>
+                <option value="Heavy">Heavy</option>
+                <option value="Severe">Severe</option>
+                <option value="Extreme">Extreme</option>
+            </select>
+
+            <label for="doors">Doors:</label>
+            <select id="doors">
+                <option value="0">0</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+            </select>
+
+            <button type="button" onclick="calculateRepairCost()">Calculate</button>
+        </form>
+
+        <div id="details">
+            <div id="result"></div>
+            <button id="copyButton" onclick="copyBill()">Copy Bill</button>
+        </div>
+    </div>
+
+    <script>
+        function calculateRepairCost() {
+            var vehicleName = document.getElementById("vehicleName").value;
+            var vehicleNumber = document.getElementById("vehicleNumber").value;
+            var ownerName = document.getElementById("ownerName").value;
+            var cid = document.getElementById("cid").value;
+            var vehicleType = document.getElementById("vehicleType").value.toLowerCase();
+            var engineDamageLevel = document.getElementById("engineDamageLevel").value.toLowerCase();
+            var bodyDamageLevel = document.getElementById("bodyDamageLevel").value.toLowerCase();
+            var doors = parseInt(document.getElementById("doors").value);
+
+            var repairData = {
+                "super": {"minor": 715, "moderate": 960, "heavy": 1130, "severe": 1300, "extreme": 1545},
+                "sports": {"minor": 710, "moderate": 920, "heavy": 1100, "severe": 1260, "extreme": 1500},
+                "sedans": {"minor": 655, "moderate": 900, "heavy": 900, "severe": 1240, "extreme": 1485},
+            };
+
+            if (vehicleType in repairData && engineDamageLevel in repairData[vehicleType] && bodyDamageLevel in repairData[vehicleType]) {
+                var repairCost = repairData[vehicleType][engineDamageLevel] + repairData[vehicleType][bodyDamageLevel];
+                repairCost += doors * 30; // Assume each additional item costs $30
+
+                document.getElementById("result").innerHTML = "<strong>BILL</strong><br><br>" +
+                    "<strong>Vehicle Name:</strong> " + vehicleName +
+                    "<br><strong>Vehicle Number:</strong> " + vehicleNumber +
+                    "<br><strong>Owner Name:</strong> " + ownerName +
+                    "<br><strong>CID:</strong> " + cid +
+                    "<br><strong>Vehicle Category:</strong> " + vehicleType +
+                    "<br><strong>Engine Damage Level:</strong> " + engineDamageLevel +
+                    "<br><strong>Body Damage Level:</strong> " + bodyDamageLevel +
+                    "<br><strong>Doors:</strong> " + doors +
+                    "<br><br><strong>Repair Cost:</strong> $" + repairCost;
+            } else {
+                document.getElementById("result").innerHTML = "Invalid vehicle type or damage level.";
+            }
+        }
+
+        function copyBill() {
+            var resultText = document.getElementById("result");
+            var textArea = document.createElement("textarea");
+            textArea.value = resultText.innerText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand("Copy");
+            document.body.removeChild(textArea);
+            alert("Bill copied to clipboard!");
+        }
+    </script>
+
+</body>
+</html>
